@@ -42,7 +42,7 @@ const App = () => (
                   </MobileLayout>
                 </ProtectedRoute>
               } />
-              <Route path="/leads/:id" element={
+              <Route path="/lead/:id" element={
                 <ProtectedRoute>
                   <LeadDetail />
                 </ProtectedRoute>
