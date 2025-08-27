@@ -5,10 +5,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LeadProvider } from "@/contexts/LeadContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { MobileLayout } from "@/components/layout/MobileLayout";
 import { Dashboard } from "@/pages/Dashboard";
 import { Leads } from "@/pages/Leads";
+import { LeadDetail } from "@/pages/LeadDetail";
 import { Templates } from "@/pages/Templates";
 import { Settings } from "@/pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -19,7 +21,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <AuthProvider>
-        <TooltipProvider>
+        <LeadProvider>
+          <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -39,6 +42,11 @@ const App = () => (
                   </MobileLayout>
                 </ProtectedRoute>
               } />
+              <Route path="/leads/:id" element={
+                <ProtectedRoute>
+                  <LeadDetail />
+                </ProtectedRoute>
+              } />
               <Route path="/templates" element={
                 <ProtectedRoute>
                   <MobileLayout>
@@ -56,7 +64,8 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
-        </TooltipProvider>
+          </TooltipProvider>
+        </LeadProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>

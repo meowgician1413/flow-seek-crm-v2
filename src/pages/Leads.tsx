@@ -1,65 +1,48 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Search, Plus, Phone, Mail, MoreVertical, Filter, Users } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useLeads } from '@/contexts/LeadContext';
+import { LeadCard } from '@/components/leads/LeadCard';
+import { AddLeadModal } from '@/components/leads/AddLeadModal';
+import { EditLeadModal } from '@/components/leads/EditLeadModal';
+import { Search, Plus, Filter, Users, X, RefreshCw } from 'lucide-react';
+import { Lead, LeadStatus } from '@/types/lead';
 
-const mockLeads = [
-  {
-    id: '1',
-    name: 'John Smith',
-    email: 'john@example.com',
-    phone: '+1234567890',
-    source: 'Website',
-    status: 'New',
-    createdAt: '2024-01-15',
-  },
-  {
-    id: '2',
-    name: 'Sarah Johnson',
-    email: 'sarah@example.com',
-    phone: '+1234567891',
-    source: 'Referral',
-    status: 'Contacted',
-    createdAt: '2024-01-14',
-  },
-  {
-    id: '3',
-    name: 'Mike Davis',
-    email: 'mike@example.com',
-    phone: '+1234567892',
-    source: 'Social Media',
-    status: 'Qualified',
-    createdAt: '2024-01-13',
-  },
-  {
-    id: '4',
-    name: 'Emma Wilson',
-    email: 'emma@example.com',
-    phone: '+1234567893',
-    source: 'Advertisement',
-    status: 'Converted',
-    createdAt: '2024-01-12',
-  },
+const statusOptions: Array<{ value: LeadStatus | 'All'; label: string }> = [
+  { value: 'All', label: 'All Leads' },
+  { value: 'New', label: 'New' },
+  { value: 'Contacted', label: 'Contacted' },
+  { value: 'Qualified', label: 'Qualified' },
+  { value: 'Converted', label: 'Converted' },
+  { value: 'Lost', label: 'Lost' },
 ];
 
-const statusColors = {
-  New: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-  Contacted: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-  Qualified: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-  Converted: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-};
-
 export const Leads = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [leads] = useState(mockLeads);
+  const { filteredLeads, filters, setFilters, isLoading } = useLeads();
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const filteredLeads = leads.filter(lead =>
-    lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleEditLead = (lead: Lead) => {
+    setEditingLead(lead);
+    setEditModalOpen(true);
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    // Simulate refresh delay
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+  const hasActiveFilters = filters.search || filters.status !== 'All';
+
+  const clearFilters = () => {
+    setFilters({ search: '', status: 'All' });
+  };
 
   return (
     <div className="p-4 space-y-6">
@@ -67,97 +50,169 @@ export const Leads = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Leads</h1>
-          <p className="text-muted-foreground">{leads.length} total leads</p>
-        </div>
-        <Button className="bg-gradient-to-r from-primary to-primary-glow">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Lead
-        </Button>
-      </div>
-
-      {/* Search and Filter */}
-      <div className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input
-            placeholder="Search leads..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Button variant="outline" size="icon">
-          <Filter className="w-4 h-4" />
-        </Button>
-      </div>
-
-      {/* Leads List */}
-      <div className="space-y-3">
-        {filteredLeads.map((lead) => (
-          <Card key={lead.id} className="shadow-sm hover:shadow-md transition-all duration-200">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-foreground">{lead.name}</h3>
-                    <Badge className={statusColors[lead.status as keyof typeof statusColors]}>
-                      {lead.status}
-                    </Badge>
-                  </div>
-                  
-                  <div className="space-y-1 text-sm text-muted-foreground">
-                    <div className="flex items-center">
-                      <Mail className="w-4 h-4 mr-2" />
-                      {lead.email}
-                    </div>
-                    <div className="flex items-center">
-                      <Phone className="w-4 h-4 mr-2" />
-                      {lead.phone}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-xs bg-muted px-2 py-1 rounded">
-                      {lead.source}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(lead.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="ml-2">
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Edit Lead</DropdownMenuItem>
-                    <DropdownMenuItem>Send Email</DropdownMenuItem>
-                    <DropdownMenuItem>Call Lead</DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {filteredLeads.length === 0 && (
-        <Card className="p-8 text-center">
-          <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No leads found</h3>
-          <p className="text-muted-foreground mb-4">
-            {searchTerm ? 'Try adjusting your search term' : 'Start by adding your first lead'}
+          <p className="text-muted-foreground">
+            {filteredLeads.length} {filters.status !== 'All' ? filters.status.toLowerCase() : ''} leads
           </p>
-          <Button className="bg-gradient-to-r from-primary to-primary-glow">
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </Button>
+          <Button 
+            className="bg-gradient-to-r from-primary to-primary-glow shadow-lg"
+            onClick={() => setAddModalOpen(true)}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Add Lead
           </Button>
-        </Card>
+        </div>
+      </div>
+
+      {/* Search and Filter */}
+      <div className="space-y-3">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder="Search by name, email, or phone..."
+              value={filters.search}
+              onChange={(e) => setFilters({ search: e.target.value })}
+              className="pl-10"
+            />
+          </div>
+          <Select
+            value={filters.status}
+            onValueChange={(value) => setFilters({ status: value as LeadStatus | 'All' })}
+          >
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {statusOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Active Filters */}
+        {hasActiveFilters && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Active filters:</span>
+            {filters.search && (
+              <div className="flex items-center gap-1 bg-muted px-2 py-1 rounded text-sm">
+                Search: "{filters.search}"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-4 w-4 p-0 hover:bg-transparent"
+                  onClick={() => setFilters({ search: '' })}
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            )}
+            {filters.status !== 'All' && (
+              <div className="flex items-center gap-1 bg-muted px-2 py-1 rounded text-sm">
+                Status: {filters.status}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-4 w-4 p-0 hover:bg-transparent"
+                  onClick={() => setFilters({ status: 'All' })}
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Clear all
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Leads List */}
+      {isLoading ? (
+        <div className="space-y-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-32 bg-muted animate-pulse rounded-lg" />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {filteredLeads.map((lead, index) => (
+            <div
+              key={lead.id}
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <LeadCard lead={lead} onEdit={handleEditLead} />
+            </div>
+          ))}
+        </div>
       )}
+
+      {/* Empty State */}
+      {!isLoading && filteredLeads.length === 0 && (
+        <div className="text-center py-12 animate-fade-in">
+          <Users className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-xl font-semibold mb-2">
+            {hasActiveFilters ? 'No leads match your filters' : 'No leads yet'}
+          </h3>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            {hasActiveFilters 
+              ? 'Try adjusting your search term or filters to find what you\'re looking for.'
+              : 'Get started by adding your first lead to begin tracking your sales pipeline.'
+            }
+          </p>
+          {hasActiveFilters ? (
+            <Button variant="outline" onClick={clearFilters}>
+              Clear Filters
+            </Button>
+          ) : (
+            <Button 
+              className="bg-gradient-to-r from-primary to-primary-glow"
+              onClick={() => setAddModalOpen(true)}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Your First Lead
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* Floating Action Button for Mobile */}
+      <Button
+        className="fixed bottom-20 right-4 h-14 w-14 rounded-full bg-gradient-to-r from-primary to-primary-glow shadow-glow z-40 md:hidden"
+        onClick={() => setAddModalOpen(true)}
+      >
+        <Plus className="w-6 h-6" />
+      </Button>
+
+      {/* Modals */}
+      <AddLeadModal
+        open={addModalOpen}
+        onOpenChange={setAddModalOpen}
+      />
+      
+      <EditLeadModal
+        lead={editingLead}
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+      />
     </div>
   );
 };
