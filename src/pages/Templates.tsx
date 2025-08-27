@@ -1,160 +1,331 @@
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Mail, MessageSquare, Phone, Edit, Copy } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { useTemplates } from '@/contexts/TemplateContext';
+import { TemplateEditor } from '@/components/templates/TemplateEditor';
+import { TemplateCard } from '@/components/templates/TemplateCard';
+import { QuickSendModal } from '@/components/templates/QuickSendModal';
+import { MessageTemplate, TemplateCategory, TemplateType } from '@/types/template';
+import { 
+  Plus, 
+  Search, 
+  Filter, 
+  Star, 
+  Mail, 
+  MessageSquare, 
+  Phone,
+  Grid,
+  List,
+  X
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
-const mockTemplates = [
-  {
-    id: '1',
-    name: 'Welcome Email',
-    type: 'email',
-    subject: 'Welcome to our service!',
-    content: 'Hi {{name}}, thank you for your interest in our service. We\'re excited to help you...',
-    lastUsed: '2 days ago',
-    useCount: 15,
-  },
-  {
-    id: '2',
-    name: 'Follow-up SMS',
-    type: 'sms',
-    subject: '',
-    content: 'Hi {{name}}, just following up on our conversation. Are you still interested in {{service}}?',
-    lastUsed: '1 week ago',
-    useCount: 8,
-  },
-  {
-    id: '3',
-    name: 'Cold Outreach',
-    type: 'email',
-    subject: 'Quick question about {{company}}',
-    content: 'Hi {{name}}, I noticed {{company}} might benefit from our {{service}}. Would you be open to a quick chat?',
-    lastUsed: '3 days ago',
-    useCount: 22,
-  },
-  {
-    id: '4',
-    name: 'Demo Invitation',
-    type: 'email',
-    subject: 'Schedule your personalized demo',
-    content: 'Hi {{name}}, would you like to see how {{service}} can help {{company}}? Let\'s schedule a 15-minute demo...',
-    lastUsed: '1 day ago',
-    useCount: 12,
-  },
-];
-
-const getTypeIcon = (type: string) => {
-  switch (type) {
-    case 'email':
-      return Mail;
-    case 'sms':
-      return MessageSquare;
-    case 'call':
-      return Phone;
-    default:
-      return Mail;
+const getCategoryDisplayName = (category: TemplateCategory | 'All') => {
+  switch (category) {
+    case 'All': return 'All';
+    case 'Introduction': return 'Introduction';
+    case 'Follow-up': return 'Follow-up';
+    case 'Closing': return 'Closing';
+    case 'Custom': return 'Custom';
   }
 };
 
-const getTypeColor = (type: string) => {
+const getTypeDisplayName = (type: TemplateType | 'All') => {
   switch (type) {
-    case 'email':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-    case 'sms':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    case 'call':
-      return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    case 'All': return 'All Types';
+    case 'email': return 'Email';
+    case 'sms': return 'SMS';
+    case 'whatsapp': return 'WhatsApp';
   }
 };
 
 export const Templates = () => {
+  const { 
+    filteredTemplates, 
+    filters, 
+    isLoading, 
+    setFilters, 
+    clearFilters,
+    deleteTemplate,
+    duplicateTemplate,
+    toggleFavorite 
+  } = useTemplates();
+  
+  const { toast } = useToast();
+  
+  const [editorMode, setEditorMode] = useState<'create' | 'edit'>('create');
+  const [selectedTemplate, setSelectedTemplate] = useState<MessageTemplate | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [isQuickSendOpen, setIsQuickSendOpen] = useState(false);
+  const [templateToDelete, setTemplateToDelete] = useState<MessageTemplate | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  const handleCreateTemplate = () => {
+    setEditorMode('create');
+    setSelectedTemplate(null);
+    setIsEditorOpen(true);
+  };
+
+  const handleEditTemplate = (template: MessageTemplate) => {
+    setEditorMode('edit');
+    setSelectedTemplate(template);
+    setIsEditorOpen(true);
+  };
+
+  const handleDuplicateTemplate = async (template: MessageTemplate) => {
+    await duplicateTemplate(template.id);
+    toast({
+      title: "Template Duplicated",
+      description: `"${template.name}" has been duplicated successfully`,
+    });
+  };
+
+  const handleDeleteTemplate = async (template: MessageTemplate) => {
+    await deleteTemplate(template.id);
+    setTemplateToDelete(null);
+    toast({
+      title: "Template Deleted",
+      description: `"${template.name}" has been deleted`,
+    });
+  };
+
+  const handleToggleFavorite = async (template: MessageTemplate) => {
+    await toggleFavorite(template.id);
+    toast({
+      title: template.isFavorite ? "Removed from Favorites" : "Added to Favorites",
+      description: `"${template.name}" ${template.isFavorite ? 'removed from' : 'added to'} favorites`,
+    });
+  };
+
+  const handleQuickSend = (template: MessageTemplate) => {
+    setSelectedTemplate(template);
+    setIsQuickSendOpen(true);
+  };
+
+  const activeFiltersCount = Object.values(filters).filter(value => 
+    value !== '' && value !== 'All' && value !== false
+  ).length;
+
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Templates</h1>
-          <p className="text-muted-foreground">Manage your message templates</p>
+          <p className="text-muted-foreground">
+            Manage your message templates • {filteredTemplates.length} templates
+          </p>
         </div>
-        <Button className="bg-gradient-to-r from-primary to-primary-glow">
+        <Button 
+          className="bg-gradient-primary text-primary-foreground shadow-elegant"
+          onClick={handleCreateTemplate}
+        >
           <Plus className="w-4 h-4 mr-2" />
           New Template
         </Button>
       </div>
 
-      {/* Template Categories */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {['All', 'Email', 'SMS', 'Call Scripts'].map((category) => (
-          <Button
-            key={category}
-            variant={category === 'All' ? 'default' : 'outline'}
-            size="sm"
-            className={category === 'All' ? 'bg-primary text-primary-foreground' : ''}
-          >
-            {category}
-          </Button>
-        ))}
+      {/* Search and Filters */}
+      <div className="flex flex-col gap-4">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder="Search templates by name or content..."
+            value={filters.search}
+            onChange={(e) => setFilters({ search: e.target.value })}
+            className="pl-10"
+          />
+        </div>
+
+        {/* Filter Controls */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Category Filter */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Filter className="w-4 h-4 mr-2" />
+                  {getCategoryDisplayName(filters.category)}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {(['All', 'Introduction', 'Follow-up', 'Closing', 'Custom'] as const).map((category) => (
+                  <DropdownMenuItem
+                    key={category}
+                    onClick={() => setFilters({ category })}
+                  >
+                    {getCategoryDisplayName(category)}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Type Filter */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  {getTypeDisplayName(filters.type)}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Filter by Type</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {(['All', 'email', 'sms', 'whatsapp'] as const).map((type) => (
+                  <DropdownMenuItem
+                    key={type}
+                    onClick={() => setFilters({ type })}
+                  >
+                    {getTypeDisplayName(type)}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Favorites Filter */}
+            <Button 
+              variant={filters.favorites ? "default" : "outline"} 
+              size="sm"
+              onClick={() => setFilters({ favorites: !filters.favorites })}
+            >
+              <Star className={`w-4 h-4 mr-2 ${filters.favorites ? 'fill-current' : ''}`} />
+              Favorites
+            </Button>
+
+            {/* Clear Filters */}
+            {activeFiltersCount > 0 && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                <X className="w-4 h-4 mr-2" />
+                Clear ({activeFiltersCount})
+              </Button>
+            )}
+          </div>
+
+          {/* View Toggle */}
+          <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+            >
+              <Grid className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
       </div>
 
-      {/* Templates Grid */}
-      <div className="space-y-4">
-        {mockTemplates.map((template) => {
-          const TypeIcon = getTypeIcon(template.type);
-          return (
-            <Card key={template.id} className="shadow-sm hover:shadow-md transition-all duration-200">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${getTypeColor(template.type)}`}>
-                      <TypeIcon className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground">{template.name}</h3>
-                      {template.subject && (
-                        <p className="text-sm text-muted-foreground">{template.subject}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon">
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="bg-muted rounded-lg p-3 mb-3">
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {template.content}
-                  </p>
-                </div>
-                
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Used {template.useCount} times</span>
-                  <span>Last used {template.lastUsed}</span>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Empty State (if no templates) */}
-      {mockTemplates.length === 0 && (
+      {/* Templates Grid/List */}
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : filteredTemplates.length === 0 ? (
         <Card className="p-8 text-center">
           <Mail className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No templates yet</h3>
+          <h3 className="text-lg font-semibold mb-2">
+            {filters.search || filters.category !== 'All' || filters.type !== 'All' || filters.favorites
+              ? 'No templates match your filters'
+              : 'No templates yet'
+            }
+          </h3>
           <p className="text-muted-foreground mb-4">
-            Create your first template to streamline your outreach
+            {filters.search || filters.category !== 'All' || filters.type !== 'All' || filters.favorites
+              ? 'Try adjusting your search or filters'
+              : 'Create your first template to streamline your outreach'
+            }
           </p>
-          <Button className="bg-gradient-to-r from-primary to-primary-glow">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Template
-          </Button>
+          {(!filters.search && filters.category === 'All' && filters.type === 'All' && !filters.favorites) && (
+            <Button 
+              className="bg-gradient-primary text-primary-foreground shadow-elegant"
+              onClick={handleCreateTemplate}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Template
+            </Button>
+          )}
         </Card>
+      ) : (
+        <div className={viewMode === 'grid' ? 'grid gap-4' : 'space-y-4'}>
+          {filteredTemplates.map((template) => (
+            <TemplateCard
+              key={template.id}
+              template={template}
+              onEdit={handleEditTemplate}
+              onDuplicate={handleDuplicateTemplate}
+              onDelete={setTemplateToDelete}
+              onToggleFavorite={handleToggleFavorite}
+              onQuickSend={handleQuickSend}
+            />
+          ))}
+        </div>
       )}
+
+      {/* Template Editor Modal */}
+      <TemplateEditor
+        isOpen={isEditorOpen}
+        onClose={() => setIsEditorOpen(false)}
+        template={selectedTemplate}
+        mode={editorMode}
+      />
+
+      {/* Quick Send Modal */}
+      <QuickSendModal
+        isOpen={isQuickSendOpen}
+        onClose={() => setIsQuickSendOpen(false)}
+        template={selectedTemplate}
+        lead={null} // In real app, this would come from context or props
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!templateToDelete} onOpenChange={() => setTemplateToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Template</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{templateToDelete?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => templateToDelete && handleDeleteTemplate(templateToDelete)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
