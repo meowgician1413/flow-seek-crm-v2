@@ -13,7 +13,7 @@ import { Leads } from './pages/Leads';
 import { LeadDetail } from './pages/LeadDetail';
 import { Templates } from './pages/Templates';
 import { Settings } from './pages/Settings';
-import NotFound from './pages/NotFound';
+import { NotFound } from './pages/NotFound';
 
 function App() {
   return (
