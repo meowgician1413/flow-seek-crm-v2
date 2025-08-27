@@ -4,6 +4,7 @@ import { LeadProvider } from './contexts/LeadContext';
 import { TemplateProvider } from './contexts/TemplateContext';
 import { CommunicationProvider } from './contexts/CommunicationContext';
 import { ActivityProvider } from './contexts/ActivityContext';
+import { ContentProvider } from './contexts/ContentContext';
 import { Toaster } from './components/ui/toaster';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { MobileLayout } from './components/layout/MobileLayout';
@@ -24,7 +25,8 @@ function App() {
         <LeadProvider>
           <TemplateProvider>
             <CommunicationProvider>
-              <ActivityProvider>
+        <ActivityProvider>
+          <ContentProvider>
             <div className="min-h-screen bg-background">
               <Routes>
                 <Route path="/auth" element={<AuthPage />} />
@@ -74,7 +76,8 @@ function App() {
               </Routes>
               <Toaster />
                 </div>
-                </ActivityProvider>
+              </ContentProvider>
+            </ActivityProvider>
               </CommunicationProvider>
             </TemplateProvider>
           </LeadProvider>
