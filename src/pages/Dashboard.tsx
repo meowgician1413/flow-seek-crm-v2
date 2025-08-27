@@ -5,6 +5,7 @@ import { StatsCard } from '@/components/dashboard/StatsCard';
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
 import { TasksSection } from '@/components/dashboard/TasksSection';
 import { LeadStatusChart } from '@/components/dashboard/LeadStatusChart';
+// Import icons from lucide-react
 import { 
   Plus, 
   Users, 
