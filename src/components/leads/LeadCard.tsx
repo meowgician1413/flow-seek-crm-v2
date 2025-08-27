@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Lead, LeadStatus } from '@/types/lead';
 import { useLeads } from '@/contexts/LeadContext';
+import { CommunicationButtons } from '@/components/communication/CommunicationButtons';
 import { Phone, Mail, MoreVertical, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -154,28 +155,11 @@ export const LeadCard = ({ lead, onEdit }: LeadCardProps) => {
           </div>
           
           <div className="flex items-center gap-1">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCall();
-              }}
-              className="h-8 w-8 p-0"
-            >
-              <Phone className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleEmail();
-              }}
-              className="h-8 w-8 p-0"
-            >
-              <Mail className="w-4 h-4" />
-            </Button>
+            <CommunicationButtons 
+              lead={lead} 
+              variant="compact"
+              className="mr-2"
+            />
             <DropdownMenu>
               <DropdownMenuTrigger 
                 asChild

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { LeadProvider } from './contexts/LeadContext';
 import { TemplateProvider } from './contexts/TemplateContext';
+import { CommunicationProvider } from './contexts/CommunicationContext';
 import { Toaster } from './components/ui/toaster';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { MobileLayout } from './components/layout/MobileLayout';
@@ -21,6 +22,7 @@ function App() {
       <AuthProvider>
         <LeadProvider>
           <TemplateProvider>
+            <CommunicationProvider>
             <div className="min-h-screen bg-background">
               <Routes>
                 <Route path="/auth" element={<AuthPage />} />
@@ -45,7 +47,7 @@ function App() {
                     </MobileLayout>
                   </ProtectedRoute>
                 } />
-                <Route path="/lead/:id" element={
+                <Route path="/leads/:id" element={
                   <ProtectedRoute>
                     <MobileLayout>
                       <LeadDetail />
@@ -70,6 +72,7 @@ function App() {
               </Routes>
               <Toaster />
             </div>
+            </CommunicationProvider>
           </TemplateProvider>
         </LeadProvider>
       </AuthProvider>

@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useLeads } from '@/contexts/LeadContext';
 import { EditLeadModal } from '@/components/leads/EditLeadModal';
+import { CommunicationButtons } from '@/components/communication/CommunicationButtons';
+import { CommunicationHistory } from '@/components/communication/CommunicationHistory';
+import { FollowUpManager } from '@/components/communication/FollowUpManager';
 import { 
   ArrowLeft, 
   Phone, 
@@ -200,42 +203,19 @@ export const LeadDetail = () => {
             <CardTitle className="text-lg">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="p-6 pt-0">
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant="outline"
-                onClick={handleCall}
-                className="h-12 flex flex-col gap-1"
-              >
-                <Phone className="w-5 h-5" />
-                <span className="text-xs">Call</span>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleEmail}
-                className="h-12 flex flex-col gap-1"
-              >
-                <Mail className="w-5 h-5" />
-                <span className="text-xs">Email</span>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleSMS}
-                className="h-12 flex flex-col gap-1"
-              >
-                <MessageSquare className="w-5 h-5" />
-                <span className="text-xs">SMS</span>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleWhatsApp}
-                className="h-12 flex flex-col gap-1"
-              >
-                <MessageSquare className="w-5 h-5" />
-                <span className="text-xs">WhatsApp</span>
-              </Button>
-            </div>
+            <CommunicationButtons lead={lead} />
           </CardContent>
         </Card>
+
+        {/* Follow-ups */}
+        <div className="animate-fade-in">
+          <FollowUpManager leadId={lead.id} compact />
+        </div>
+
+        {/* Communication History */}
+        <div className="animate-fade-in">
+          <CommunicationHistory leadId={lead.id} compact />
+        </div>
 
         {/* Activity Timeline */}
         <Card className="animate-fade-in">
