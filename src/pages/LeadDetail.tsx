@@ -9,6 +9,8 @@ import { EditLeadModal } from '@/components/leads/EditLeadModal';
 import { CommunicationButtons } from '@/components/communication/CommunicationButtons';
 import { CommunicationHistory } from '@/components/communication/CommunicationHistory';
 import { FollowUpManager } from '@/components/communication/FollowUpManager';
+import { ActivityTimeline } from '@/components/activity/ActivityTimeline';
+import { EngagementScore } from '@/components/activity/EngagementScore';
 import { 
   ArrowLeft, 
   Phone, 
@@ -218,46 +220,14 @@ export const LeadDetail = () => {
         </div>
 
         {/* Activity Timeline */}
-        <Card className="animate-fade-in">
-          <CardHeader>
-            <CardTitle className="text-lg">Activity Timeline</CardTitle>
-          </CardHeader>
-          <CardContent className="p-6 pt-0">
-            {activities.length > 0 ? (
-              <div className="space-y-4">
-                {activities.map((activity, index) => {
-                  const IconComponent = activityIcons[activity.type] || Clock;
-                  return (
-                    <div key={activity.id} className="flex gap-3">
-                      <div className="flex flex-col items-center">
-                        <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                          <IconComponent className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                        {index < activities.length - 1 && (
-                          <div className="w-0.5 h-6 bg-border mt-2" />
-                        )}
-                      </div>
-                      <div className="flex-1 pb-4">
-                        <p className="text-sm">{activity.description}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {formatDate(activity.createdAt)}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <Clock className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">No activities yet</p>
-                <p className="text-sm text-muted-foreground">
-                  Activities will appear here when you interact with this lead
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <div className="animate-fade-in">
+          <ActivityTimeline leadId={lead.id} compact />
+        </div>
+
+        {/* Engagement Score */}
+        <div className="animate-fade-in">
+          <EngagementScore leadId={lead.id} compact />
+        </div>
       </div>
 
       <EditLeadModal

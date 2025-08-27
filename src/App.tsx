@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { LeadProvider } from './contexts/LeadContext';
 import { TemplateProvider } from './contexts/TemplateContext';
 import { CommunicationProvider } from './contexts/CommunicationContext';
+import { ActivityProvider } from './contexts/ActivityContext';
 import { Toaster } from './components/ui/toaster';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { MobileLayout } from './components/layout/MobileLayout';
@@ -23,6 +24,7 @@ function App() {
         <LeadProvider>
           <TemplateProvider>
             <CommunicationProvider>
+              <ActivityProvider>
             <div className="min-h-screen bg-background">
               <Routes>
                 <Route path="/auth" element={<AuthPage />} />
@@ -71,11 +73,12 @@ function App() {
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster />
-            </div>
-            </CommunicationProvider>
-          </TemplateProvider>
-        </LeadProvider>
-      </AuthProvider>
+                </div>
+                </ActivityProvider>
+              </CommunicationProvider>
+            </TemplateProvider>
+          </LeadProvider>
+        </AuthProvider>
     </Router>
   );
 }
