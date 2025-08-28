@@ -6,6 +6,7 @@ import { CommunicationProvider } from './contexts/CommunicationContext';
 import { ActivityProvider } from './contexts/ActivityContext';
 import { ContentProvider } from './contexts/ContentContext';
 import { IntegrationProvider } from './contexts/IntegrationContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import { Toaster } from './components/ui/sonner';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { MobileLayout } from './components/layout/MobileLayout';
@@ -26,12 +27,13 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <LeadProvider>
-          <TemplateProvider>
-            <CommunicationProvider>
-              <ActivityProvider>
-                <ContentProvider>
-                  <IntegrationProvider>
+        <NotificationProvider>
+          <LeadProvider>
+            <TemplateProvider>
+              <CommunicationProvider>
+                <ActivityProvider>
+                  <ContentProvider>
+                    <IntegrationProvider>
                     <Routes>
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/" element={
@@ -100,12 +102,13 @@ function App() {
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                     <Toaster />
-                  </IntegrationProvider>
-                </ContentProvider>
-              </ActivityProvider>
-            </CommunicationProvider>
-          </TemplateProvider>
-        </LeadProvider>
+                    </IntegrationProvider>
+                  </ContentProvider>
+                </ActivityProvider>
+              </CommunicationProvider>
+            </TemplateProvider>
+          </LeadProvider>
+        </NotificationProvider>
       </AuthProvider>
     </Router>
   );

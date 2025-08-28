@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Lead, Activity, LeadStatus, LeadFilters } from '@/types/lead';
 import { useAuth } from './AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { notificationService } from '@/services/notificationService';
 
 interface LeadContextType {
   leads: Lead[];
@@ -209,6 +210,15 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
         type: 'status_change',
         description: 'Lead created',
       });
+
+      // Create notification for new lead
+      if (user?.id) {
+        await notificationService.notifyNewLead(
+          user.id,
+          leadData.name,
+          leadData.source
+        );
+      }
       
       toast({
         title: 'Lead Added',
