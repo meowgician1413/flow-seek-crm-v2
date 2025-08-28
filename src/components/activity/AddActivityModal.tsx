@@ -225,18 +225,18 @@ export const AddActivityModal = ({ leadId, onClose, initialType }: AddActivityMo
                 <Target className="w-4 h-4" />
                 Outcome
               </Label>
-              <Select 
-                value={formData.outcome || ''} 
-                onValueChange={(value) => setFormData(prev => ({ 
-                  ...prev, 
-                  outcome: value as ActivityOutcome 
-                }))}
+               <Select 
+                 value={formData.outcome || 'no-outcome'}
+                 onValueChange={(value) => setFormData(prev => ({ 
+                   ...prev, 
+                   outcome: value === 'no-outcome' ? undefined : value as ActivityOutcome 
+                 }))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select outcome (optional)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No outcome</SelectItem>
+                  <SelectItem value="no-outcome">No outcome</SelectItem>
                   {outcomeOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}

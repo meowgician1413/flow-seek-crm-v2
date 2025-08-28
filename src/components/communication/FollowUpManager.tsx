@@ -269,17 +269,17 @@ export const FollowUpManager = ({ leadId, compact = false }: FollowUpManagerProp
                 <div className="space-y-2">
                   <Label>Type (Optional)</Label>
                   <Select 
-                    value={newFollowUp.type || ''} 
-                    onValueChange={(value) => setNewFollowUp(prev => ({ 
-                      ...prev, 
-                      type: value as CommunicationType || undefined 
-                    }))}
+                     value={newFollowUp.type || 'no-type'}
+                     onValueChange={(value) => setNewFollowUp(prev => ({ 
+                       ...prev, 
+                       type: value === 'no-type' ? undefined : value as CommunicationType 
+                     }))}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select follow-up type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No specific type</SelectItem>
+                      <SelectItem value="no-type">No specific type</SelectItem>
                       <SelectItem value="call">Call</SelectItem>
                       <SelectItem value="email">Email</SelectItem>
                       <SelectItem value="sms">SMS</SelectItem>
@@ -367,17 +367,17 @@ export const FollowUpManager = ({ leadId, compact = false }: FollowUpManagerProp
                   <div className="space-y-2">
                     <Label>Type (Optional)</Label>
                     <Select 
-                      value={newFollowUp.type || ''} 
-                      onValueChange={(value) => setNewFollowUp(prev => ({ 
-                        ...prev, 
-                        type: value as CommunicationType || undefined 
-                      }))}
+                      value={newFollowUp.type || 'no-type'} 
+                       onValueChange={(value) => setNewFollowUp(prev => ({ 
+                         ...prev, 
+                         type: value === 'no-type' ? undefined : value as CommunicationType 
+                       }))}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select follow-up type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No specific type</SelectItem>
+                        <SelectItem value="no-type">No specific type</SelectItem>
                         <SelectItem value="call">Call</SelectItem>
                         <SelectItem value="email">Email</SelectItem>
                         <SelectItem value="sms">SMS</SelectItem>

@@ -61,7 +61,7 @@ export const QuickCommunicationModal = ({ isOpen, onClose, lead, type }: QuickCo
   const { sendCommunication, isLoading } = useCommunication();
   const { user } = useAuth();
   
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('no-template');
   const [content, setContent] = useState('');
   const [subject, setSubject] = useState('');
   const [scheduleFollowUp, setScheduleFollowUp] = useState(false);
@@ -93,7 +93,7 @@ export const QuickCommunicationModal = ({ isOpen, onClose, lead, type }: QuickCo
 
   // Apply selected template
   useEffect(() => {
-    if (selectedTemplateId) {
+    if (selectedTemplateId && selectedTemplateId !== 'no-template') {
       const template = templates.find(t => t.id === selectedTemplateId);
       if (template) {
         const variables = getVariableValues();
@@ -108,7 +108,7 @@ export const QuickCommunicationModal = ({ isOpen, onClose, lead, type }: QuickCo
   // Reset form when modal opens/closes
   useEffect(() => {
     if (!isOpen) {
-      setSelectedTemplateId('');
+      setSelectedTemplateId('no-template');
       setContent('');
       setSubject('');
       setScheduleFollowUp(false);
@@ -133,7 +133,7 @@ export const QuickCommunicationModal = ({ isOpen, onClose, lead, type }: QuickCo
 
     const communicationData: QuickCommunicationData = {
       type,
-      templateId: selectedTemplateId || undefined,
+      templateId: selectedTemplateId === 'no-template' ? undefined : selectedTemplateId || undefined,
       content: type === 'call' ? lead.phone : 
                type === 'email' ? `${lead.email}:${content}` :
                `${lead.phone}:${content}`,
@@ -206,7 +206,7 @@ export const QuickCommunicationModal = ({ isOpen, onClose, lead, type }: QuickCo
                   <SelectValue placeholder="Choose a template or write your own" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No template</SelectItem>
+                  <SelectItem value="no-template">No template</SelectItem>
                   {relevantTemplates.map((template) => (
                     <SelectItem key={template.id} value={template.id}>
                       <div className="flex items-center gap-2">
