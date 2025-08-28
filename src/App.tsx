@@ -38,65 +38,65 @@ function App() {
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <Dashboard />
-                          </MobileLayout>
+        <MobileLayout title="Dashboard">
+          <Dashboard />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
                       <Route path="/dashboard" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <Dashboard />
-                          </MobileLayout>
+        <MobileLayout title="Dashboard">
+          <Dashboard />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
                       <Route path="/leads" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <Leads />
-                          </MobileLayout>
+        <MobileLayout title="Leads">
+          <Leads />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
                       <Route path="/leads/:id" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <LeadDetail />
-                          </MobileLayout>
+        <MobileLayout title="Lead Details">
+          <LeadDetail />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
                       <Route path="/integrations" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <Integrations />
-                          </MobileLayout>
+        <MobileLayout title="Integrations">
+          <Integrations />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
                       <Route path="/templates" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <Templates />
-                          </MobileLayout>
+        <MobileLayout title="Templates">
+          <Templates />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
                       <Route path="/files" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <Files />
-                          </MobileLayout>
+        <MobileLayout title="Files">
+          <Files />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
-                      <Route path="/pages" element={
-                        <ProtectedRoute>
-                          <MobileLayout>
-                            <Pages />
-                          </MobileLayout>
-                        </ProtectedRoute>
-                      } />
+                       <Route path="/pages" element={
+                         <ProtectedRoute>
+                           <MobileLayout title="Pages">
+                             <Pages />
+                           </MobileLayout>
+                         </ProtectedRoute>
+                       } />
                       <Route path="/settings" element={
                         <ProtectedRoute>
-                          <MobileLayout>
-                            <Settings />
-                          </MobileLayout>
+        <MobileLayout title="Settings">
+          <Settings />
+        </MobileLayout>
                         </ProtectedRoute>
                       } />
                       <Route path="*" element={<NotFound />} />
