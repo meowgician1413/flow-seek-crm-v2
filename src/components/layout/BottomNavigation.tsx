@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Users, FileText, Settings } from 'lucide-react';
+import { Home, Users, FileText, Settings, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { to: '/dashboard', icon: Home, label: 'Dashboard' },
   { to: '/leads', icon: Users, label: 'Leads' },
+  { to: '/integrations', icon: Zap, label: 'Integrations' },
   { to: '/templates', icon: FileText, label: 'Templates' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ];
