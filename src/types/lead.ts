@@ -9,6 +9,10 @@ export interface Lead {
   source: LeadSource;
   status: LeadStatus;
   notes?: string;
+  company?: string;
+  lead_score?: number;
+  priority?: 'high' | 'medium' | 'low';
+  lead_value?: number;
   createdAt: string;
   updatedAt: string;
 }

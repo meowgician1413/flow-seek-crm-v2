@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Zap, Activity, Settings } from 'lucide-react';
+import { Plus, Zap, Activity, Settings, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,6 +8,7 @@ import { IntegrationCard } from '@/components/integrations/IntegrationCard';
 import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
 import { IntegrationStats } from '@/components/integrations/IntegrationStats';
 import { IntegrationLogs } from '@/components/integrations/IntegrationLogs';
+import { AIFeatures } from '@/components/integrations/AIFeatures';
 
 export default function Integrations() {
   const { sources, loading } = useIntegrations();
@@ -37,7 +38,7 @@ export default function Integrations() {
       <IntegrationStats />
 
       <Tabs defaultValue="sources" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="sources" className="gap-2">
             <Zap className="w-4 h-4" />
             Sources
@@ -45,6 +46,10 @@ export default function Integrations() {
           <TabsTrigger value="logs" className="gap-2">
             <Activity className="w-4 h-4" />
             Activity
+          </TabsTrigger>
+          <TabsTrigger value="ai" className="gap-2">
+            <Sparkles className="w-4 h-4" />
+            AI Features
           </TabsTrigger>
           <TabsTrigger value="settings" className="gap-2">
             <Settings className="w-4 h-4" />
@@ -78,6 +83,10 @@ export default function Integrations() {
 
         <TabsContent value="logs" className="mt-6">
           <IntegrationLogs />
+        </TabsContent>
+
+        <TabsContent value="ai" className="mt-6">
+          <AIFeatures />
         </TabsContent>
 
         <TabsContent value="settings" className="mt-6">

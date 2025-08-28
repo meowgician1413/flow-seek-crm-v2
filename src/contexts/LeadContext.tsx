@@ -17,6 +17,7 @@ interface LeadContextType {
   getLeadById: (id: string) => Lead | undefined;
   getActivitiesByLeadId: (leadId: string) => Activity[];
   filteredLeads: Lead[];
+  refreshLeads: () => Promise<void>;
 }
 
 const LeadContext = createContext<LeadContextType | undefined>(undefined);
@@ -309,6 +310,12 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return true;
   }).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
+  const refreshLeads = async () => {
+    // In a real implementation, this would fetch from Supabase
+    // For now, it's a no-op since we're using mock data
+    console.log('Refreshing leads...');
+  };
+
   return (
     <LeadContext.Provider value={{
       leads,
@@ -324,6 +331,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
       getLeadById,
       getActivitiesByLeadId,
       filteredLeads,
+      refreshLeads,
     }}>
       {children}
     </LeadContext.Provider>
