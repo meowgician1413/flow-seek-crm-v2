@@ -12,30 +12,33 @@ const navItems = [
 
 export const BottomNavigation = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
-      <div className="flex justify-around items-center h-16 px-4 max-w-md mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border/50 z-50 shadow-glow">
+      <div className="flex justify-around items-center h-18 px-4 max-w-md mx-auto">
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
               cn(
-                'flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-1 transition-all duration-200',
+                'flex flex-col items-center justify-center min-w-0 flex-1 py-3 px-2 transition-all duration-200 rounded-lg mx-1',
                 isActive
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'text-primary bg-primary/10'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               )
             }
           >
             {({ isActive }) => (
               <>
                 <div className={cn(
-                  'p-1.5 rounded-lg transition-all duration-200',
-                  isActive && 'bg-primary/10'
+                  'p-2 rounded-xl transition-all duration-200 shadow-card',
+                  isActive && 'bg-gradient-primary text-primary-foreground shadow-elegant scale-110'
                 )}>
                   <Icon className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-medium mt-1 truncate">{label}</span>
+                <span className={cn(
+                  "text-xs font-medium mt-1.5 truncate transition-all",
+                  isActive && "font-semibold"
+                )}>{label}</span>
               </>
             )}
           </NavLink>

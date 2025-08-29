@@ -214,12 +214,12 @@ export const TemplateEditor: React.FC<TemplateEditorProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-popover border-border shadow-glow">
+        <DialogHeader className="border-b border-border pb-4">
+          <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
             {mode === 'create' ? 'Create New Template' : 'Edit Template'}
             {formData.type && (
-              <Badge variant="outline" className="ml-2">
+              <Badge variant="outline" className="ml-2 text-xs">
                 {React.createElement(getTypeIcon(formData.type), { className: "w-3 h-3 mr-1" })}
                 {formData.type.toUpperCase()}
               </Badge>
@@ -375,13 +375,13 @@ export const TemplateEditor: React.FC<TemplateEditorProps> = ({
           </TabsContent>
         </Tabs>
 
-        <div className="flex justify-between pt-4 border-t">
-          <Button variant="outline" onClick={onClose}>
+        <div className="flex justify-between pt-6 border-t border-border bg-muted/20 -mx-6 px-6 -mb-6 pb-6 mt-6">
+          <Button variant="outline" onClick={onClose} className="shadow-card">
             <X className="w-4 h-4 mr-2" />
             Cancel
           </Button>
           
-          <Button onClick={handleSave} disabled={isSaving}>
+          <Button onClick={handleSave} disabled={isSaving} className="bg-gradient-primary shadow-elegant">
             <Save className="w-4 h-4 mr-2" />
             {isSaving ? 'Saving...' : mode === 'create' ? 'Create Template' : 'Save Changes'}
           </Button>

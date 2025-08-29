@@ -16,11 +16,11 @@ interface LeadCardProps {
 }
 
 const statusColors = {
-  New: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 border-blue-200',
-  Contacted: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 border-yellow-200',
-  Qualified: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300 border-orange-200',
-  Converted: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-200',
-  Lost: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 border-red-200',
+  New: 'bg-status-new-bg text-status-new border-status-new/20',
+  Contacted: 'bg-status-contacted-bg text-status-contacted border-status-contacted/20',
+  Qualified: 'bg-status-qualified-bg text-status-qualified border-status-qualified/20',
+  Converted: 'bg-status-converted-bg text-status-converted border-status-converted/20',
+  Lost: 'bg-status-lost-bg text-status-lost border-status-lost/20',
 };
 
 const quickStatusOptions: LeadStatus[] = ['New', 'Contacted', 'Qualified', 'Converted', 'Lost'];
@@ -70,12 +70,12 @@ export const LeadCard = ({ lead, onEdit }: LeadCardProps) => {
   return (
     <Card 
       className={cn(
-        "shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer animate-fade-in",
+        "shadow-card hover:shadow-elegant transition-all duration-200 cursor-pointer animate-fade-in border-border/50",
         isUpdating && "opacity-75"
       )}
       onClick={handleCardClick}
     >
-      <CardContent className="p-4">
+      <CardContent className="p-6">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-2">
@@ -109,12 +109,12 @@ export const LeadCard = ({ lead, onEdit }: LeadCardProps) => {
                         )}
                       >
                         <div className="flex items-center gap-2">
-                          <div className={cn("w-2 h-2 rounded-full", {
-                            'bg-blue-500': status === 'New',
-                            'bg-yellow-500': status === 'Contacted',
-                            'bg-orange-500': status === 'Qualified',
-                            'bg-green-500': status === 'Converted',
-                            'bg-red-500': status === 'Lost',
+                        <div className={cn("w-2 h-2 rounded-full", {
+                            'bg-status-new': status === 'New',
+                            'bg-status-contacted': status === 'Contacted',
+                            'bg-status-qualified': status === 'Qualified',
+                            'bg-status-converted': status === 'Converted',
+                            'bg-status-lost': status === 'Lost',
                           })} />
                           {status}
                         </div>
@@ -145,8 +145,8 @@ export const LeadCard = ({ lead, onEdit }: LeadCardProps) => {
         </div>
         
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xs bg-muted px-2 py-1 rounded">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs bg-muted px-3 py-1.5 rounded-full font-medium border border-border/50">
               {lead.source}
             </span>
             <span className="text-xs text-muted-foreground">

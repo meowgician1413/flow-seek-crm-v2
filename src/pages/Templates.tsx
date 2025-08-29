@@ -137,7 +137,7 @@ export const Templates = () => {
           </p>
         </div>
         <Button 
-          className="bg-gradient-primary text-primary-foreground shadow-elegant"
+          className="bg-gradient-primary text-primary-foreground shadow-elegant hover:shadow-glow"
           onClick={handleCreateTemplate}
         >
           <Plus className="w-4 h-4 mr-2" />
@@ -250,15 +250,17 @@ export const Templates = () => {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : filteredTemplates.length === 0 ? (
-        <Card className="p-8 text-center">
-          <Mail className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">
+        <Card className="p-8 text-center shadow-card border-border/50">
+          <div className="mb-6 p-6 bg-gradient-subtle rounded-full shadow-card mx-auto w-fit">
+            <Mail className="w-12 h-12 text-muted-foreground/70" />
+          </div>
+          <h3 className="text-xl font-semibold mb-3">
             {filters.search || filters.category !== 'All' || filters.type !== 'All' || filters.favorites
               ? 'No templates match your filters'
               : 'No templates yet'
             }
           </h3>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto leading-relaxed">
             {filters.search || filters.category !== 'All' || filters.type !== 'All' || filters.favorites
               ? 'Try adjusting your search or filters'
               : 'Create your first template to streamline your outreach'
@@ -266,8 +268,9 @@ export const Templates = () => {
           </p>
           {(!filters.search && filters.category === 'All' && filters.type === 'All' && !filters.favorites) && (
             <Button 
-              className="bg-gradient-primary text-primary-foreground shadow-elegant"
+              className="bg-gradient-primary text-primary-foreground shadow-elegant hover:shadow-glow"
               onClick={handleCreateTemplate}
+              size="lg"
             >
               <Plus className="w-4 h-4 mr-2" />
               Create Template

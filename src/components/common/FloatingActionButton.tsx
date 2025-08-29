@@ -18,23 +18,23 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 }) => {
   const sizeClasses = {
     sm: 'h-12 w-12',
-    md: 'h-14 w-14',
-    lg: 'h-16 w-16'
+    md: 'h-16 w-16',
+    lg: 'h-20 w-20'
   };
 
   const iconSizes = {
     sm: 'h-5 w-5',
-    md: 'h-6 w-6',
-    lg: 'h-7 w-7'
+    md: 'h-7 w-7',
+    lg: 'h-9 w-9'
   };
 
   return (
     <Button
       onClick={onClick}
       className={cn(
-        "fixed bottom-20 right-4 z-50 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105",
-        "bg-primary hover:bg-primary/90 text-primary-foreground",
-        "border-2 border-primary-foreground/20",
+        "fixed bottom-24 right-6 z-50 rounded-full shadow-glow hover:shadow-elegant hover:scale-110 transition-all duration-300",
+        "bg-gradient-primary text-primary-foreground",
+        "border-2 border-primary-foreground/10 backdrop-blur-sm",
         sizeClasses[size],
         className
       )}

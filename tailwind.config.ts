@@ -44,6 +44,10 @@ export default {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))'
 				},
+				info: {
+					DEFAULT: 'hsl(var(--info))',
+					foreground: 'hsl(var(--info-foreground))'
+				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
@@ -59,6 +63,28 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				status: {
+					'new': 'hsl(var(--status-new))',
+					'new-bg': 'hsl(var(--status-new-bg))',
+					'contacted': 'hsl(var(--status-contacted))',
+					'contacted-bg': 'hsl(var(--status-contacted-bg))',
+					'qualified': 'hsl(var(--status-qualified))',
+					'qualified-bg': 'hsl(var(--status-qualified-bg))',
+					'converted': 'hsl(var(--status-converted))',
+					'converted-bg': 'hsl(var(--status-converted-bg))',
+					'lost': 'hsl(var(--status-lost))',
+					'lost-bg': 'hsl(var(--status-lost-bg))'
+				},
+				category: {
+					'introduction': 'hsl(var(--category-introduction))',
+					'introduction-bg': 'hsl(var(--category-introduction-bg))',
+					'followup': 'hsl(var(--category-followup))',
+					'followup-bg': 'hsl(var(--category-followup-bg))',
+					'closing': 'hsl(var(--category-closing))',
+					'closing-bg': 'hsl(var(--category-closing-bg))',
+					'custom': 'hsl(var(--category-custom))',
+					'custom-bg': 'hsl(var(--category-custom-bg))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -123,6 +149,7 @@ export default {
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',
 				'glow': 'var(--shadow-glow)',
+				'card': 'var(--shadow-card)',
 			}
 		}
 	},

@@ -8,48 +8,75 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 248 250 252;
-    --foreground: 218 25% 15%;
+    --background: 249 251 253;
+    --foreground: 226 25% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 218 25% 15%;
+    --card-foreground: 226 25% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 218 25% 15%;
+    --popover-foreground: 226 25% 14%;
 
-    --primary: 203 87% 53%;
+    --primary: 234 89% 74%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 203 87% 63%;
+    --primary-glow: 234 89% 84%;
 
-    --secondary: 158 64% 52%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 158 64% 62%;
+    --secondary: 220 13% 91%;
+    --secondary-foreground: 226 25% 14%;
+    --secondary-glow: 220 13% 96%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 218 25% 45%;
+    --muted: 220 13% 96%;
+    --muted-foreground: 226 25% 45%;
 
-    --accent: 220 14% 96%;
-    --accent-foreground: 218 25% 15%;
+    --accent: 234 89% 94%;
+    --accent-foreground: 234 89% 24%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --warning: 43 96% 56%;
+    --warning: 38 88% 54%;
     --warning-foreground: 0 0% 100%;
 
-    --success: 142 76% 36%;
+    --success: 142 69% 45%;
     --success-foreground: 0 0% 100%;
 
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
     --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 203 87% 53%;
+    --input: 220 13% 95%;
+    --ring: 234 89% 74%;
+
+    /* Status Colors */
+    --status-new: 214 100% 59%;
+    --status-new-bg: 214 100% 96%;
+    --status-contacted: 38 88% 54%;
+    --status-contacted-bg: 38 88% 95%;
+    --status-qualified: 24 95% 53%;
+    --status-qualified-bg: 24 95% 95%;
+    --status-converted: 142 69% 45%;
+    --status-converted-bg: 142 69% 95%;
+    --status-lost: 0 72% 60%;
+    --status-lost-bg: 0 72% 95%;
+
+    /* Category Colors */
+    --category-introduction: 234 89% 74%;
+    --category-introduction-bg: 234 89% 94%;
+    --category-followup: 38 88% 54%;
+    --category-followup-bg: 38 88% 95%;
+    --category-closing: 142 69% 45%;
+    --category-closing-bg: 142 69% 95%;
+    --category-custom: 283 39% 53%;
+    --category-custom-bg: 283 39% 95%;
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-foreground) / 0.1));
     
-    --shadow-elegant: 0 10px 25px -5px hsl(var(--primary) / 0.1);
-    --shadow-glow: 0 0 30px hsl(var(--primary-glow) / 0.3);
+    --shadow-elegant: 0 4px 12px -2px hsl(var(--primary) / 0.08);
+    --shadow-glow: 0 0 24px hsl(var(--primary-glow) / 0.12);
+    --shadow-card: 0 1px 3px 0 hsl(220 13% 69% / 0.1), 0 1px 2px -1px hsl(220 13% 69% / 0.1);
 
     --radius: 0.5rem;
 
@@ -71,48 +98,75 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222 47% 11%;
+    --background: 224 36% 9%;
     --foreground: 213 31% 91%;
 
-    --card: 225 25% 15%;
+    --card: 224 36% 12%;
     --card-foreground: 213 31% 91%;
 
-    --popover: 225 25% 15%;
+    --popover: 224 36% 12%;
     --popover-foreground: 213 31% 91%;
 
-    --primary: 203 87% 53%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 203 87% 63%;
+    --primary: 234 89% 74%;
+    --primary-foreground: 224 36% 9%;
+    --primary-glow: 234 89% 84%;
 
-    --secondary: 158 64% 52%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 158 64% 62%;
+    --secondary: 224 36% 18%;
+    --secondary-foreground: 213 31% 91%;
+    --secondary-glow: 224 36% 24%;
 
-    --muted: 225 25% 20%;
+    --muted: 224 36% 15%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 225 25% 20%;
-    --accent-foreground: 213 31% 91%;
+    --accent: 224 36% 18%;
+    --accent-foreground: 234 89% 74%;
 
-    --destructive: 0 62% 50%;
+    --destructive: 0 72% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --warning: 43 96% 56%;
-    --warning-foreground: 0 0% 100%;
+    --warning: 38 88% 54%;
+    --warning-foreground: 224 36% 9%;
 
-    --success: 142 76% 36%;
+    --success: 142 69% 45%;
     --success-foreground: 0 0% 100%;
 
-    --border: 225 25% 20%;
-    --input: 225 25% 20%;
-    --ring: 203 87% 53%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 224 36% 18%;
+    --input: 224 36% 15%;
+    --ring: 234 89% 74%;
+
+    /* Status Colors - Dark Mode */
+    --status-new: 214 100% 70%;
+    --status-new-bg: 214 50% 15%;
+    --status-contacted: 38 88% 64%;
+    --status-contacted-bg: 38 44% 15%;
+    --status-qualified: 24 95% 63%;
+    --status-qualified-bg: 24 48% 15%;
+    --status-converted: 142 69% 55%;
+    --status-converted-bg: 142 35% 15%;
+    --status-lost: 0 72% 70%;
+    --status-lost-bg: 0 36% 15%;
+
+    /* Category Colors - Dark Mode */
+    --category-introduction: 234 89% 74%;
+    --category-introduction-bg: 234 45% 15%;
+    --category-followup: 38 88% 64%;
+    --category-followup-bg: 38 44% 15%;
+    --category-closing: 142 69% 55%;
+    --category-closing-bg: 142 35% 15%;
+    --category-custom: 283 39% 63%;
+    --category-custom-bg: 283 20% 15%;
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-foreground) / 0.1));
     
-    --shadow-elegant: 0 10px 25px -5px hsl(var(--primary) / 0.2);
-    --shadow-glow: 0 0 30px hsl(var(--primary-glow) / 0.4);
+    --shadow-elegant: 0 4px 12px -2px hsl(var(--primary) / 0.15);
+    --shadow-glow: 0 0 24px hsl(var(--primary-glow) / 0.2);
+    --shadow-card: 0 1px 3px 0 hsl(224 36% 6% / 0.2), 0 1px 2px -1px hsl(224 36% 6% / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

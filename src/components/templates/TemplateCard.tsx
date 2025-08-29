@@ -50,10 +50,10 @@ const getTypeColor = (type: MessageTemplate['type']) => {
 
 const getCategoryColor = (category: MessageTemplate['category']) => {
   switch (category) {
-    case 'Introduction': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-    case 'Follow-up': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
-    case 'Closing': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    case 'Custom': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
+    case 'Introduction': return 'bg-category-introduction-bg text-category-introduction border-category-introduction/20';
+    case 'Follow-up': return 'bg-category-followup-bg text-category-followup border-category-followup/20';
+    case 'Closing': return 'bg-category-closing-bg text-category-closing border-category-closing/20';
+    case 'Custom': return 'bg-category-custom-bg text-category-custom border-category-custom/20';
   }
 };
 
@@ -69,8 +69,8 @@ export const TemplateCard: React.FC<TemplateCardProps> = ({
   const timeAgo = formatDistanceToNow(new Date(template.updatedAt), { addSuffix: true });
 
   return (
-    <Card className="shadow-sm hover:shadow-md transition-all duration-200 group">
-      <CardContent className="p-4">
+    <Card className="shadow-card hover:shadow-elegant transition-all duration-200 group border-border/50">
+      <CardContent className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">

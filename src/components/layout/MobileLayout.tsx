@@ -11,7 +11,7 @@ export const MobileLayout = ({ children, title }: MobileLayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       <MobileHeader title={title} />
-      <main className="pb-16">
+      <main className="pb-20">
         {children}
       </main>
       <BottomNavigation />
