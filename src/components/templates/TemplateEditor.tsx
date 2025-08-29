@@ -214,8 +214,8 @@ export const TemplateEditor: React.FC<TemplateEditorProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-popover border-border shadow-glow">
-        <DialogHeader className="border-b border-border pb-4">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-popover border-border shadow-glow">
+        <DialogHeader className="border-b border-border pb-4 sticky top-0 bg-popover z-10">
           <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
             {mode === 'create' ? 'Create New Template' : 'Edit Template'}
             {formData.type && (
@@ -227,155 +227,157 @@ export const TemplateEditor: React.FC<TemplateEditorProps> = ({
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="edit" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="edit">Edit</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
+        <div className="overflow-y-auto flex-1 px-1">
+          <Tabs defaultValue="edit" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="edit">Edit</TabsTrigger>
+              <TabsTrigger value="preview">Preview</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="edit" className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Template Name</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Enter template name"
-                />
+            <TabsContent value="edit" className="space-y-6 mt-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Template Name</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Enter template name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, category: value as TemplateCategory }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Introduction">Introduction</SelectItem>
+                      <SelectItem value="Follow-up">Follow-up</SelectItem>
+                      <SelectItem value="Closing">Closing</SelectItem>
+                      <SelectItem value="Custom">Custom</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="type">Message Type</Label>
                 <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, category: value as TemplateCategory }))}
+                  value={formData.type}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as TemplateType }))}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Introduction">Introduction</SelectItem>
-                    <SelectItem value="Follow-up">Follow-up</SelectItem>
-                    <SelectItem value="Closing">Closing</SelectItem>
-                    <SelectItem value="Custom">Custom</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="sms">SMS</SelectItem>
+                    <SelectItem value="whatsapp">WhatsApp</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="type">Message Type</Label>
-              <Select
-                value={formData.type}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as TemplateType }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="email">Email</SelectItem>
-                  <SelectItem value="sms">SMS</SelectItem>
-                  <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {formData.type === 'email' && (
-              <div className="space-y-2">
-                <Label htmlFor="subject">Subject Line</Label>
-                <Input
-                  id="subject"
-                  value={formData.subject}
-                  onChange={(e) => handleSubjectChange(e.target.value)}
-                  placeholder="Enter email subject"
-                />
-              </div>
-            )}
-
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-2 space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="content">Message Content</Label>
-                  {formData.type === 'sms' && (
-                    <span className={`text-xs ${characterCount > smsLimit ? 'text-destructive' : 'text-muted-foreground'}`}>
-                      {characterCount}/{smsLimit} characters
-                    </span>
-                  )}
+              {formData.type === 'email' && (
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Subject Line</Label>
+                  <Input
+                    id="subject"
+                    value={formData.subject}
+                    onChange={(e) => handleSubjectChange(e.target.value)}
+                    placeholder="Enter email subject"
+                  />
                 </div>
-                <Textarea
-                  id="content"
-                  name="content"
-                  value={formData.content}
-                  onChange={(e) => handleContentChange(e.target.value)}
-                  placeholder="Enter your message content..."
-                  className="min-h-[300px] resize-none"
-                />
-              </div>
+              )}
 
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium">Available Variables</Label>
-                  <div className="mt-2 space-y-2 max-h-[200px] overflow-y-auto">
-                    {TEMPLATE_VARIABLES.map((variable) => (
-                      <button
-                        key={variable.name}
-                        type="button"
-                        onClick={() => insertVariable(variable.name)}
-                        className="w-full text-left p-2 text-xs bg-muted hover:bg-muted/80 rounded border transition-colors"
-                      >
-                        <div className="font-medium">{`{{${variable.name}}}`}</div>
-                        <div className="text-muted-foreground">{variable.description}</div>
-                      </button>
-                    ))}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="content">Message Content</Label>
+                    {formData.type === 'sms' && (
+                      <span className={`text-xs ${characterCount > smsLimit ? 'text-destructive' : 'text-muted-foreground'}`}>
+                        {characterCount}/{smsLimit} characters
+                      </span>
+                    )}
                   </div>
+                  <Textarea
+                    id="content"
+                    name="content"
+                    value={formData.content}
+                    onChange={(e) => handleContentChange(e.target.value)}
+                    placeholder="Enter your message content..."
+                    className="min-h-[300px] resize-none"
+                  />
                 </div>
 
-                {formData.variables.length > 0 && (
+                <div className="space-y-4">
                   <div>
-                    <Label className="text-sm font-medium">Used Variables</Label>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {formData.variables.map((variable) => (
-                        <Badge key={variable} variant="secondary" className="text-xs">
-                          {variable}
-                        </Badge>
+                    <Label className="text-sm font-medium">Available Variables</Label>
+                    <div className="mt-2 space-y-2 max-h-[200px] overflow-y-auto">
+                      {TEMPLATE_VARIABLES.map((variable) => (
+                        <button
+                          key={variable.name}
+                          type="button"
+                          onClick={() => insertVariable(variable.name)}
+                          className="w-full text-left p-2 text-xs bg-muted hover:bg-muted/80 rounded border transition-colors"
+                        >
+                          <div className="font-medium">{`{{${variable.name}}}`}</div>
+                          <div className="text-muted-foreground">{variable.description}</div>
+                        </button>
                       ))}
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
-          </TabsContent>
 
-          <TabsContent value="preview" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Template Preview</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Preview with sample data
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {formData.type === 'email' && formData.subject && (
+                  {formData.variables.length > 0 && (
+                    <div>
+                      <Label className="text-sm font-medium">Used Variables</Label>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {formData.variables.map((variable) => (
+                          <Badge key={variable} variant="secondary" className="text-xs">
+                            {variable}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="preview" className="space-y-4 mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Template Preview</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Preview with sample data
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {formData.type === 'email' && formData.subject && (
+                    <div>
+                      <Label className="text-sm font-medium">Subject:</Label>
+                      <div className="mt-1 p-2 bg-muted rounded border">
+                        {previewSubject}
+                      </div>
+                    </div>
+                  )}
+                  
                   <div>
-                    <Label className="text-sm font-medium">Subject:</Label>
-                    <div className="mt-1 p-2 bg-muted rounded border">
-                      {previewSubject}
+                    <Label className="text-sm font-medium">Content:</Label>
+                    <div className="mt-1 p-4 bg-muted rounded border whitespace-pre-wrap">
+                      {previewContent}
                     </div>
                   </div>
-                )}
-                
-                <div>
-                  <Label className="text-sm font-medium">Content:</Label>
-                  <div className="mt-1 p-4 bg-muted rounded border whitespace-pre-wrap">
-                    {previewContent}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
 
-        <div className="flex justify-between pt-6 border-t border-border bg-muted/20 -mx-6 px-6 -mb-6 pb-6 mt-6">
+        <div className="flex justify-between pt-6 border-t border-border bg-muted/20 sticky bottom-0 -mx-6 px-6 -mb-6 pb-6 mt-6">
           <Button variant="outline" onClick={onClose} className="shadow-card">
             <X className="w-4 h-4 mr-2" />
             Cancel
