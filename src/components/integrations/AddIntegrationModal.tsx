@@ -228,7 +228,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
   if (step === 'preview') {
     return (
       <Dialog open={open} onOpenChange={handleModalClose}>
-        <DialogContent className="max-w-4xl max-h-[85vh] bg-popover border-border shadow-glow">
+        <DialogContent className="max-w-4xl max-h-[80vh] bg-popover border-border shadow-glow">
           <DialogHeader className="border-b border-border pb-4">
             <div className="flex items-center space-x-2">
               <Button
@@ -244,7 +244,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
           </DialogHeader>
 
           <div className="flex flex-col overflow-hidden flex-1">
-            <div className="overflow-y-auto flex-1 px-1 py-2">
+            <div className="overflow-y-auto flex-1 px-1 py-2 mb-4">
               <div className="space-y-6">
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <CheckCircle className="w-4 h-4 text-green-500" />
@@ -320,7 +320,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
               </div>
             </div>
 
-            <div className="flex justify-between pt-4 border-t border-border bg-popover">
+            <div className="flex justify-between pt-4 pb-6 border-t border-border bg-popover">
               <Button
                 variant="ghost"
                 onClick={() => setStep('config')}
@@ -358,13 +358,13 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
 
   return (
     <Dialog open={open} onOpenChange={handleModalClose}>
-      <DialogContent className="max-w-2xl max-h-[85vh] bg-popover border-border shadow-glow">
+      <DialogContent className="max-w-2xl max-h-[80vh] bg-popover border-border shadow-glow">
         <DialogHeader className="border-b border-border pb-4">
           <DialogTitle className="text-xl font-semibold text-foreground">Add New Integration</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col overflow-hidden flex-1">
-          <div className="overflow-y-auto flex-1 px-1 py-2">
+          <div className="overflow-y-auto flex-1 px-1 py-2 mb-4">
             <form onSubmit={handleConnect} className="space-y-6">
               <div className="space-y-4">
                 <Label className="text-base font-semibold text-foreground">Integration Type</Label>
@@ -446,7 +446,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
             </form>
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4 border-t border-border bg-popover">
+          <div className="flex justify-end space-x-3 pt-4 pb-6 border-t border-border bg-popover">
             <Button
               type="button"
               variant="outline" 
