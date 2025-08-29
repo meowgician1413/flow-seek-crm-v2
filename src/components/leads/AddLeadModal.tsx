@@ -100,114 +100,116 @@ export const AddLeadModal = ({ open, onOpenChange }: AddLeadModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto bg-popover border-border shadow-glow">
-        <DialogHeader className="border-b border-border pb-4 sticky top-0 bg-popover z-10">
-          <DialogTitle className="text-xl font-semibold text-foreground">Add New Lead</DialogTitle>
+      <DialogContent className="sm:max-w-md max-w-[95vw] max-h-[75vh] m-4 bg-popover border-border shadow-glow">
+        <DialogHeader className="border-b border-border pb-3 sticky top-0 bg-popover z-10">
+          <DialogTitle className="text-lg font-semibold text-foreground">Add New Lead</DialogTitle>
         </DialogHeader>
         
-        <div className="overflow-y-auto flex-1 px-1">
-          <form onSubmit={handleSubmit} className="space-y-6 pt-2">
-            <div className="space-y-3">
-              <Label htmlFor="name" className="text-foreground font-semibold">Full Name *</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="Enter full name"
-                className={cn("bg-background text-foreground", errors.name && 'border-destructive')}
-              />
-              {errors.name && (
-                <p className="text-sm text-destructive">{errors.name}</p>
+        <div className="flex flex-col overflow-hidden flex-1">
+          <div className="overflow-y-auto flex-1 px-1 py-2 mb-2">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-foreground font-semibold text-sm">Full Name *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  placeholder="Enter full name"
+                  className={cn("bg-background text-foreground h-10", errors.name && 'border-destructive')}
+                />
+                {errors.name && (
+                  <p className="text-xs text-destructive">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-foreground font-semibold text-sm">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  placeholder="Enter email address"
+                  className={cn("bg-background text-foreground h-10", errors.email && 'border-destructive')}
+                />
+                {errors.email && (
+                  <p className="text-xs text-destructive">{errors.email}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-foreground font-semibold text-sm">Phone *</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleChange('phone', e.target.value)}
+                  placeholder="Enter phone number"
+                  className={cn("bg-background text-foreground h-10", errors.phone && 'border-destructive')}
+                />
+                {errors.phone && (
+                  <p className="text-xs text-destructive">{errors.phone}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="source" className="text-foreground font-semibold text-sm">Lead Source</Label>
+                <Select
+                  value={formData.source}
+                  onValueChange={(value) => handleChange('source', value)}
+                >
+                  <SelectTrigger className="bg-background text-foreground h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border-border shadow-glow z-50">
+                    {leadSources.map((source) => (
+                      <SelectItem key={source} value={source}>
+                        {source}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="notes" className="text-foreground font-semibold text-sm">Notes</Label>
+                <Textarea
+                  id="notes"
+                  value={formData.notes}
+                  onChange={(e) => handleChange('notes', e.target.value)}
+                  placeholder="Add any additional notes..."
+                  rows={2}
+                  className="bg-background text-foreground resize-none"
+                />
+              </div>
+            </form>
+          </div>
+
+          <div className="flex gap-3 pt-3 pb-4 border-t border-border bg-popover">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClose}
+              className="flex-1 shadow-card h-10"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              onClick={handleSubmit}
+              className="flex-1 bg-gradient-primary shadow-elegant hover:shadow-glow h-10"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                'Add Lead'
               )}
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="email" className="text-foreground font-semibold">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                placeholder="Enter email address"
-                className={cn("bg-background text-foreground", errors.email && 'border-destructive')}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="phone" className="text-foreground font-semibold">Phone *</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-                placeholder="Enter phone number"
-                className={cn("bg-background text-foreground", errors.phone && 'border-destructive')}
-              />
-              {errors.phone && (
-                <p className="text-sm text-destructive">{errors.phone}</p>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="source" className="text-foreground font-semibold">Lead Source</Label>
-              <Select
-                value={formData.source}
-                onValueChange={(value) => handleChange('source', value)}
-              >
-                <SelectTrigger className="bg-background text-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-popover border-border shadow-glow">
-                  {leadSources.map((source) => (
-                    <SelectItem key={source} value={source}>
-                      {source}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-3 pb-4">
-              <Label htmlFor="notes" className="text-foreground font-semibold">Notes</Label>
-              <Textarea
-                id="notes"
-                value={formData.notes}
-                onChange={(e) => handleChange('notes', e.target.value)}
-                placeholder="Add any additional notes..."
-                rows={3}
-                className="bg-background text-foreground"
-              />
-            </div>
-          </form>
-        </div>
-
-        <div className="flex gap-3 pt-4 border-t border-border bg-popover sticky bottom-0 -mx-6 px-6 -mb-6 pb-6">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleClose}
-            className="flex-1 shadow-card"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            disabled={isLoading}
-            onClick={handleSubmit}
-            className="flex-1 bg-gradient-primary shadow-elegant hover:shadow-glow"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Adding...
-              </>
-            ) : (
-              'Add Lead'
-            )}
-          </Button>
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
