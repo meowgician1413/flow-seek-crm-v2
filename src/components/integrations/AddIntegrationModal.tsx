@@ -44,7 +44,7 @@ const leadFieldOptions = [
 
 export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalProps) {
   const { createSource } = useIntegrations();
-  const { addLead } = useLeads();
+  const { addLead, leads } = useLeads();
   const [step, setStep] = useState<'config' | 'preview'>('config');
   const [selectedType, setSelectedType] = useState<string>('');
   const [name, setName] = useState('');
@@ -79,6 +79,12 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
 
     if (selectedType === 'manual' && !googleSheetUrl.trim()) {
       toast.error('Please enter a Google Sheets URL');
+      return;
+    }
+
+    // Validate Google Sheets URL
+    if (selectedType === 'manual' && !googleSheetUrl.includes('docs.google.com/spreadsheets')) {
+      toast.error('Please enter a valid Google Sheets URL (must contain "docs.google.com/spreadsheets")');
       return;
     }
 
@@ -139,6 +145,13 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
   const handleImportLeads = async () => {
     setLoading(true);
     try {
+      // Get existing leads to check for duplicates
+      const existingEmails = new Set(leads.map(lead => lead.email.toLowerCase()));
+      const leadsToImport = [];
+      const duplicateEmails = [];
+      let skippedCount = 0;
+
+      // Check for duplicates and prepare valid leads
       for (const row of sampleSheetData) {
         const leadData: any = {
           source: 'Other' as const,
@@ -155,20 +168,49 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
           }
         });
 
-        // Ensure required fields are present
-        if (leadData.name && leadData.email) {
-          await addLead(leadData);
+        // Check if required fields are present
+        if (!leadData.name || !leadData.email) {
+          skippedCount++;
+          continue;
         }
+
+        // Check for duplicate email
+        if (existingEmails.has(leadData.email.toLowerCase())) {
+          duplicateEmails.push(leadData.email);
+          continue;
+        }
+
+        leadsToImport.push(leadData);
+        existingEmails.add(leadData.email.toLowerCase()); // Prevent duplicates within import batch
+      }
+
+      // Import valid leads
+      for (const leadData of leadsToImport) {
+        await addLead(leadData);
       }
 
       // Create the integration
       await handleCreateIntegration();
       
-      toast.success('5 leads imported successfully!');
+      // Show detailed success/error messages
+      if (leadsToImport.length > 0) {
+        let message = `Successfully imported ${leadsToImport.length} leads!`;
+        if (duplicateEmails.length > 0) {
+          message += ` ${duplicateEmails.length} duplicate email(s) were skipped.`;
+        }
+        if (skippedCount > 0) {
+          message += ` ${skippedCount} invalid row(s) were skipped.`;
+        }
+        toast.success(message);
+      } else {
+        toast.error('No valid leads could be imported. Check for duplicates or missing required fields.');
+      }
+      
       onOpenChange(false);
       resetForm();
     } catch (error) {
-      toast.error('Failed to import leads');
+      console.error('Import error:', error);
+      toast.error('Failed to import leads. Please try again.');
     } finally {
       setLoading(false);
     }
