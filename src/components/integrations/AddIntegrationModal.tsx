@@ -34,7 +34,7 @@ const sampleSheetData = [
 ];
 
 const leadFieldOptions = [
-  { value: '', label: 'Skip this column' },
+  { value: 'skip', label: 'Skip this column' },
   { value: 'name', label: 'Name' },
   { value: 'email', label: 'Email' },
   { value: 'phone', label: 'Phone' },
@@ -93,7 +93,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
         else if (lowerCol.includes('email')) initialMapping[col] = 'email';
         else if (lowerCol.includes('phone')) initialMapping[col] = 'phone';
         else if (lowerCol.includes('company')) initialMapping[col] = 'company';
-        else initialMapping[col] = '';
+        else initialMapping[col] = 'skip';
       });
       setColumnMapping(initialMapping);
       setStep('preview');
@@ -150,7 +150,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
 
         // Map columns to lead fields
         Object.entries(columnMapping).forEach(([sheetColumn, leadField]) => {
-          if (leadField && row[sheetColumn as keyof typeof row]) {
+          if (leadField && leadField !== 'skip' && row[sheetColumn as keyof typeof row]) {
             leadData[leadField] = row[sheetColumn as keyof typeof row];
           }
         });
@@ -253,7 +253,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
                         </div>
                         <div className="text-muted-foreground">→</div>
                         <Select
-                          value={columnMapping[sheetColumn] || ''}
+                          value={columnMapping[sheetColumn] || 'skip'}
                           onValueChange={(value) => updateColumnMapping(sheetColumn, value)}
                         >
                           <SelectTrigger className="w-48 bg-background border-border text-foreground">
@@ -301,7 +301,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
                 </Button>
                 <Button
                   onClick={handleImportLeads}
-                  disabled={loading || !Object.values(columnMapping).some(v => v)}
+                  disabled={loading || !Object.values(columnMapping).some(v => v && v !== 'skip')}
                   className="bg-gradient-primary shadow-elegant hover:shadow-glow"
                 >
                   {loading ? 'Importing...' : `Import 5 Leads`}
