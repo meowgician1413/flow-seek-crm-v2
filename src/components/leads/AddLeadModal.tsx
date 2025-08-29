@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useLeads } from '@/contexts/LeadContext';
 import { LeadSource } from '@/types/lead';
 import { Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface AddLeadModalProps {
   open: boolean;
@@ -99,66 +100,66 @@ export const AddLeadModal = ({ open, onOpenChange }: AddLeadModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md mx-4 animate-scale-in">
-        <DialogHeader>
-          <DialogTitle>Add New Lead</DialogTitle>
+      <DialogContent className="sm:max-w-md mx-4 animate-scale-in bg-popover border-border shadow-glow">
+        <DialogHeader className="border-b border-border pb-4">
+          <DialogTitle className="text-xl font-semibold text-foreground">Add New Lead</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name *</Label>
+        <form onSubmit={handleSubmit} className="space-y-6 pt-2">
+          <div className="space-y-3">
+            <Label htmlFor="name" className="text-foreground font-semibold">Full Name *</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
               placeholder="Enter full name"
-              className={errors.name ? 'border-destructive' : ''}
+              className={cn("bg-background text-foreground", errors.name && 'border-destructive')}
             />
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+          <div className="space-y-3">
+            <Label htmlFor="email" className="text-foreground font-semibold">Email *</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
               placeholder="Enter email address"
-              className={errors.email ? 'border-destructive' : ''}
+              className={cn("bg-background text-foreground", errors.email && 'border-destructive')}
             />
             {errors.email && (
               <p className="text-sm text-destructive">{errors.email}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone *</Label>
+          <div className="space-y-3">
+            <Label htmlFor="phone" className="text-foreground font-semibold">Phone *</Label>
             <Input
               id="phone"
               type="tel"
               value={formData.phone}
               onChange={(e) => handleChange('phone', e.target.value)}
               placeholder="Enter phone number"
-              className={errors.phone ? 'border-destructive' : ''}
+              className={cn("bg-background text-foreground", errors.phone && 'border-destructive')}
             />
             {errors.phone && (
               <p className="text-sm text-destructive">{errors.phone}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="source">Lead Source</Label>
+          <div className="space-y-3">
+            <Label htmlFor="source" className="text-foreground font-semibold">Lead Source</Label>
             <Select
               value={formData.source}
               onValueChange={(value) => handleChange('source', value)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-background text-foreground">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-popover border-border shadow-glow">
                 {leadSources.map((source) => (
                   <SelectItem key={source} value={source}>
                     {source}
@@ -168,30 +169,31 @@ export const AddLeadModal = ({ open, onOpenChange }: AddLeadModalProps) => {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+          <div className="space-y-3">
+            <Label htmlFor="notes" className="text-foreground font-semibold">Notes</Label>
             <Textarea
               id="notes"
               value={formData.notes}
               onChange={(e) => handleChange('notes', e.target.value)}
               placeholder="Add any additional notes..."
               rows={3}
+              className="bg-background text-foreground"
             />
           </div>
 
-          <div className="flex gap-2 pt-4">
+          <div className="flex gap-3 pt-4 border-t border-border">
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 shadow-card"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isLoading}
-              className="flex-1 bg-gradient-to-r from-primary to-primary-glow"
+              className="flex-1 bg-gradient-primary shadow-elegant hover:shadow-glow"
             >
               {isLoading ? (
                 <>
