@@ -27,6 +27,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
   const [selectedType, setSelectedType] = useState<string>('');
   const [name, setName] = useState('');
   const [config, setConfig] = useState('{}');
+  const [googleSheetUrl, setGoogleSheetUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,10 +38,18 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
       return;
     }
 
+    if (selectedType === 'manual' && !googleSheetUrl.trim()) {
+      toast.error('Please enter a Google Sheets URL');
+      return;
+    }
+
     setLoading(true);
     try {
       let parsedConfig = {};
-      if (config.trim()) {
+      
+      if (selectedType === 'manual') {
+        parsedConfig = { google_sheets_url: googleSheetUrl.trim() };
+      } else if (config.trim()) {
         try {
           parsedConfig = JSON.parse(config);
         } catch (error) {
@@ -57,11 +66,12 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
         status: 'active'
       });
 
-      toast.success('Integration created successfully!');
+      toast.success('Google Sheets integration connected successfully!');
       onOpenChange(false);
       setSelectedType('');
       setName('');
       setConfig('{}');
+      setGoogleSheetUrl('');
     } catch (error) {
       toast.error('Failed to create integration');
     } finally {
@@ -123,7 +133,24 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
                 />
               </div>
 
-              {selectedIntegration && (
+              {selectedIntegration && selectedType === 'manual' && (
+                <div className="space-y-3">
+                  <Label htmlFor="googleSheetUrl" className="text-foreground font-semibold">Google Sheets URL *</Label>
+                  <Input
+                    id="googleSheetUrl"
+                    placeholder="https://docs.google.com/spreadsheets/d/your-sheet-id/edit"
+                    value={googleSheetUrl}
+                    onChange={(e) => setGoogleSheetUrl(e.target.value)}
+                    required
+                    className="bg-background text-foreground"
+                  />
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Enter the URL of your Google Sheets document to import leads from
+                  </p>
+                </div>
+              )}
+
+              {selectedIntegration && selectedType !== 'manual' && (
                 <div className="space-y-3">
                   <Label htmlFor="config" className="text-foreground font-semibold">Configuration (JSON)</Label>
                   <Textarea
@@ -156,11 +183,11 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
             </Button>
             <Button 
               type="submit" 
-              disabled={loading || !selectedType || !name.trim()}
+              disabled={loading || !selectedType || !name.trim() || (selectedType === 'manual' && !googleSheetUrl.trim())}
               onClick={handleSubmit}
               className="bg-gradient-primary shadow-elegant hover:shadow-glow"
             >
-              {loading ? 'Creating...' : 'Create Integration'}
+              {loading ? 'Connecting...' : selectedType === 'manual' ? 'Connect Google Sheets' : 'Create Integration'}
             </Button>
           </div>
         </div>
