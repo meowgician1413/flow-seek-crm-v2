@@ -8,14 +8,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { useIntegrations } from '@/contexts/IntegrationContext';
 import { toast } from 'sonner';
-import { Globe, Facebook, FileText, Linkedin, User, Webhook } from 'lucide-react';
+import { Globe, Facebook, FileText, User } from 'lucide-react';
 
 const integrationTypes = [
   { value: 'website', label: 'Website Form', icon: Globe, description: 'Connect your website contact forms' },
   { value: 'facebook', label: 'Facebook Lead Ads', icon: Facebook, description: 'Import leads from Facebook campaigns' },
   { value: 'google_forms', label: 'Google Forms', icon: FileText, description: 'Connect Google Forms responses' },
-  { value: 'linkedin', label: 'LinkedIn Lead Gen', icon: Linkedin, description: 'Import LinkedIn lead generation forms' },
-  { value: 'webhook', label: 'Generic Webhook', icon: Webhook, description: 'Custom webhook for any platform' },
   { value: 'manual', label: 'Manual Entry', icon: User, description: 'Manual lead import and entry' },
 ];
 
@@ -75,101 +73,96 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden bg-popover border-border shadow-glow">
-        <DialogHeader className="border-b border-border pb-4 sticky top-0 bg-popover z-10">
+      <DialogContent className="max-w-2xl max-h-[85vh] bg-popover border-border shadow-glow">
+        <DialogHeader className="border-b border-border pb-4">
           <DialogTitle className="text-xl font-semibold text-foreground">Add New Integration</DialogTitle>
         </DialogHeader>
 
-        <div className="overflow-y-auto flex-1 px-1">
-          <form onSubmit={handleSubmit} className="space-y-6 pt-2">
-            <div className="space-y-4">
-              <Label className="text-base font-semibold text-foreground">Integration Type</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {integrationTypes.map((type) => {
-                  const Icon = type.icon;
-                  return (
-                    <Card
-                      key={type.value}
-                      className={`p-4 cursor-pointer border-2 transition-all shadow-card hover:shadow-elegant ${
-                        selectedType === type.value
-                          ? 'border-primary bg-primary/5 shadow-elegant'
-                          : 'border-border hover:border-primary/50'
-                      }`}
-                      onClick={() => setSelectedType(type.value)}
-                    >
-                      <div className="flex items-start space-x-3">
-                        <Icon className={`w-5 h-5 mt-0.5 ${
-                          selectedType === type.value ? 'text-primary' : 'text-muted-foreground'
-                        }`} />
-                        <div>
-                          <h4 className="font-semibold text-sm text-foreground">{type.label}</h4>
-                          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{type.description}</p>
+        <div className="flex flex-col overflow-hidden flex-1">
+          <div className="overflow-y-auto flex-1 px-1 py-2">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <Label className="text-base font-semibold text-foreground">Integration Type</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {integrationTypes.map((type) => {
+                    const Icon = type.icon;
+                    return (
+                      <Card
+                        key={type.value}
+                        className={`p-4 cursor-pointer border-2 transition-all shadow-card hover:shadow-elegant ${
+                          selectedType === type.value
+                            ? 'border-primary bg-primary/5 shadow-elegant'
+                            : 'border-border hover:border-primary/50'
+                        }`}
+                        onClick={() => setSelectedType(type.value)}
+                      >
+                        <div className="flex items-start space-x-3">
+                          <Icon className={`w-5 h-5 mt-0.5 ${
+                            selectedType === type.value ? 'text-primary' : 'text-muted-foreground'
+                          }`} />
+                          <div>
+                            <h4 className="font-semibold text-sm text-foreground">{type.label}</h4>
+                            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{type.description}</p>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  );
-                })}
+                      </Card>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-3">
-              <Label htmlFor="name" className="text-foreground font-semibold">Integration Name *</Label>
-              <Input
-                id="name"
-                placeholder="e.g., Main Website Form"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="bg-background text-foreground"
-              />
-            </div>
-
-            {selectedIntegration && (
               <div className="space-y-3">
-                <Label htmlFor="config" className="text-foreground font-semibold">Configuration (JSON)</Label>
-                <Textarea
-                  id="config"
-                  placeholder='{"field_mapping": {"name": "full_name", "email": "email_address"}}'
-                  value={config}
-                  onChange={(e) => setConfig(e.target.value)}
-                  rows={4}
-                  className="font-mono text-sm bg-background text-foreground"
+                <Label htmlFor="name" className="text-foreground font-semibold">Integration Name *</Label>
+                <Input
+                  id="name"
+                  placeholder="e.g., Main Website Form"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="bg-background text-foreground"
                 />
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Optional: Configure field mappings and integration-specific settings in JSON format
-                </p>
               </div>
-            )}
 
-            {selectedType === 'webhook' && (
-              <div className="p-4 bg-accent/50 rounded-lg space-y-2 border border-border/50">
-                <h4 className="font-semibold text-foreground">Webhook Setup</h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  After creating this integration, you'll receive a unique webhook URL to use with your external service.
-                </p>
-              </div>
-            )}
-          </form>
-        </div>
+              {selectedIntegration && (
+                <div className="space-y-3">
+                  <Label htmlFor="config" className="text-foreground font-semibold">Configuration (JSON)</Label>
+                  <Textarea
+                    id="config"
+                    placeholder='{"field_mapping": {"name": "full_name", "email": "email_address"}}'
+                    value={config}
+                    onChange={(e) => setConfig(e.target.value)}
+                    rows={4}
+                    className="font-mono text-sm bg-background text-foreground"
+                  />
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Optional: Configure field mappings and integration-specific settings in JSON format
+                  </p>
+                </div>
+              )}
 
-        <div className="flex justify-end space-x-3 pt-4 border-t border-border bg-popover sticky bottom-0 -mx-6 px-6 -mb-6 pb-6">
-          <Button
-            type="button"
-            variant="outline" 
-            onClick={() => onOpenChange(false)}
-            disabled={loading}
-            className="shadow-card"
-          >
-            Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            disabled={loading || !selectedType || !name.trim()}
-            onClick={handleSubmit}
-            className="bg-gradient-primary shadow-elegant hover:shadow-glow"
-          >
-            {loading ? 'Creating...' : 'Create Integration'}
-          </Button>
+              <div className="pb-4"></div>
+            </form>
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4 border-t border-border bg-popover">
+            <Button
+              type="button"
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+              disabled={loading}
+              className="shadow-card"
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={loading || !selectedType || !name.trim()}
+              onClick={handleSubmit}
+              className="bg-gradient-primary shadow-elegant hover:shadow-glow"
+            >
+              {loading ? 'Creating...' : 'Create Integration'}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
