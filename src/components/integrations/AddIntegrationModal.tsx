@@ -26,10 +26,11 @@ interface AddIntegrationModalProps {
 
 // Sample sheet data for preview
 const sampleSheetData = [
-  { 'Full Name': 'John Smith', 'Email Address': 'john.smith@example.com', 'Phone Number': '+1-555-123-4567', 'Company Name': 'Tech Corp' },
-  { 'Full Name': 'Sarah Johnson', 'Email Address': 'sarah.j@company.com', 'Phone Number': '+1-555-234-5678', 'Company Name': 'StartupXYZ' },
-  { 'Full Name': 'Mike Davis', 'Email Address': 'mike.davis@startup.io', 'Phone Number': '+1-555-345-6789', 'Company Name': 'Innovation Labs' },
-  { 'Full Name': 'Emma Wilson', 'Email Address': 'emma.wilson@corp.com', 'Phone Number': '+1-555-456-7890', 'Company Name': 'Global Inc' }
+  { 'Full Name': 'John Smith', 'Email Address': 'john@example.com', 'Phone Number': '+1234567890', 'Company Name': 'Tech Corp' },
+  { 'Full Name': 'Sarah Johnson', 'Email Address': 'sarah@example.com', 'Phone Number': '+0987654321', 'Company Name': 'Design Studio' },
+  { 'Full Name': 'Mike Chen', 'Email Address': 'mike@example.com', 'Phone Number': '+1122334455', 'Company Name': 'Marketing Inc' },
+  { 'Full Name': 'Emma Wilson', 'Email Address': 'emma@example.com', 'Phone Number': '+5544332211', 'Company Name': 'Sales Pro' },
+  { 'Full Name': 'David Lee', 'Email Address': 'david@example.com', 'Phone Number': '+9988776655', 'Company Name': 'Startup Hub' }
 ];
 
 const leadFieldOptions = [
@@ -141,7 +142,10 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
       for (const row of sampleSheetData) {
         const leadData: any = {
           source: 'Other' as const,
-          status: 'New' as const
+          status: 'New' as const,
+          id: crypto.randomUUID(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         };
 
         // Map columns to lead fields
@@ -160,7 +164,9 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
       // Create the integration
       await handleCreateIntegration();
       
-      toast.success(`Successfully imported ${sampleSheetData.length} leads!`);
+      toast.success('5 leads imported successfully!');
+      onOpenChange(false);
+      resetForm();
     } catch (error) {
       toast.error('Failed to import leads');
     } finally {
@@ -230,7 +236,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
                     </Table>
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Showing 3 of {sampleSheetData.length} rows
+                    Showing 3 of 5 rows
                   </p>
                 </Card>
 
@@ -298,7 +304,7 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
                   disabled={loading || !Object.values(columnMapping).some(v => v)}
                   className="bg-gradient-primary shadow-elegant hover:shadow-glow"
                 >
-                  {loading ? 'Importing...' : `Import ${sampleSheetData.length} Leads`}
+                  {loading ? 'Importing...' : `Import 5 Leads`}
                 </Button>
               </div>
             </div>
