@@ -138,8 +138,6 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
   const handleImportLeads = async () => {
     setLoading(true);
     try {
-      const importedCount = sampleSheetData.length;
-      
       for (const row of sampleSheetData) {
         const leadData: any = {
           source: 'Other' as const,
@@ -155,8 +153,6 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
 
         // Ensure required fields are present
         if (leadData.name && leadData.email) {
-          // Add a small delay to ensure unique IDs
-          await new Promise(resolve => setTimeout(resolve, 1));
           await addLead(leadData);
         }
       }
@@ -164,13 +160,8 @@ export function AddIntegrationModal({ open, onOpenChange }: AddIntegrationModalP
       // Create the integration
       await handleCreateIntegration();
       
-      // Close modal and reset form
-      onOpenChange(false);
-      resetForm();
-      
-      toast.success(`Successfully imported ${importedCount} leads!`);
+      toast.success(`Successfully imported ${sampleSheetData.length} leads!`);
     } catch (error) {
-      console.error('Import error:', error);
       toast.error('Failed to import leads');
     } finally {
       setLoading(false);
